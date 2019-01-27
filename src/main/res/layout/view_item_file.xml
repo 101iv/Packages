@@ -5,18 +5,23 @@
     android:orientation="horizontal"
     android:paddingBottom="8dp"
     android:paddingEnd="8dp"
+    android:paddingRight="8dp"
     android:paddingStart="16dp"
+    android:paddingLeft="16dp"
     android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/icon_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_file_92dp" />
 
     <TextView
         android:id="@+id/name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp" />
 
 </LinearLayout>

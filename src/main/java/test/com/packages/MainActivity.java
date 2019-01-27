@@ -36,15 +36,15 @@ public class MainActivity extends AppCompatActivity {
 
         //контейнер для списка привязываем к его айди из макета
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        //
+        //устанавливаем слушатель для этого контейнера
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
         //Класс, получающий список пакетов
         appManager = new AppManager(this);
         List<AppInfo> installedApps = appManager.getInstalledApps();
 
+        //новый адаптер
         appsAdapter = new AppsAdapter();
-
 
         //обновляемый список привязываем к его айди из макета
         RecyclerView recyclerView = findViewById(R.id.apps_rv);
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         //менеджер, отвечающий за вывод приложений
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-        //устанавливаем для списка наш менеджер
+        //устанавливаем для обновляемого списка наш менеджер
         recyclerView.setLayoutManager(layoutManager);
 
         //устанавливаем для списка менедджер, который отвечает за порядок вывода
@@ -64,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
         //добавляем в список декоратор
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        //создаем объект на базе нашего класса
+        //создаем адаптер для обновляемого списка
         AppsAdapter appsAdapter = new AppsAdapter();
-        //и привязывае к вью наш адаптер
+        //и привязывае его к списку
         recyclerView.setAdapter(appsAdapter);
 
-        //к адаптеру привязываем список установленных приложений
+        //в адаптер добавляем список приложенией
         appsAdapter.setApps(installedApps);
 
         //сообщаем адаптеру, что данные изменились.
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //методо перезагрузка списка приложений
+    //метод перезагрузка списка приложений
     private void reloadApps() {
         List<AppInfo> installedApps = appManager.getInstalledApps();
         appsAdapter.setApps(installedApps);
