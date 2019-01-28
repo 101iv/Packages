@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AppManager appManager;
 
+    private static final int TYPE_DIRECTORY = 0;
+    private static final int TYPE_FILE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
