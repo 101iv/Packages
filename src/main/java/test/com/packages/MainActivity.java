@@ -1,7 +1,10 @@
 package test.com.packages;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -14,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import android.support.v7.widget.SearchView;
 
+import java.io.File;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,14 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**свайп для списка */
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private AppsAdapter appsAdapter;
-
     private AppManager appManager;
 
-    private static final int TYPE_DIRECTORY = 0;
-    private static final int TYPE_FILE = 1;
-
+    private static final int REQUEST_CODE_PICK_APK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +151,50 @@ public class MainActivity extends AppCompatActivity {
 
     private void startFilePickerActivity() {
         Intent intent = new Intent(this, FilePickerActivity.class);
-        startActivity(intent);
+
+        //startActivity(intent);
+        //не просто запускаем Activity, но и ждём какого-то результата от неё.
+        startActivityForResult(intent, REQUEST_CODE_PICK_APK);
+
     }
+
+    @Override
+    //проверим, что ответ пришёл именно от нашей Activity, получим путь до файла и выведем его в лог
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PICK_APK && resultCode == RESULT_OK) {
+            String apkPath = data.getStringExtra(FilePickerActivity.EXTRA_FILE_PATH);
+            Log.i(TAG, "APK: " + apkPath);
+
+            startAppInstallation(apkPath);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    //здесь будем запускать установку приложения
+    private void startAppInstallation(String apkPath) {
+
+        Intent installIntent = new Intent(Intent.ACTION_VIEW);
+        Uri uri;
+        //проверяем версию Android, и если она больше либо равна N (7.0)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            uri = FileProvider.getUriForFile(this,
+                    BuildConfig.APPLICATION_ID + ".provider", new File(apkPath));
+            installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        } else {
+            //на более ранних версиях мы вполне можем использовать старый способ создания URI
+            uri = Uri.fromFile(new File(apkPath));
+        }
+
+        installIntent.setDataAndType(uri, "application/vnd.android.package-archive");
+        installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Создаст новый процесс
+
+        startActivity(installIntent);
+
+    }
+
+
+
+
 
 
 
