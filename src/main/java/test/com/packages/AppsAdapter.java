@@ -69,6 +69,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsAdapter.ViewHolder> {
         holder.nameTv.setText(appInfo.getName());
         holder.versionTv.setText(appInfo.getVersionName());
         holder.iconIv.setImageDrawable(appInfo.getIcon());
+
+        //тег для того чтобы можно было удалить, содерижт список инфо о приложении
+        holder.itemView.setTag(appInfo);
     }
 
     // В этом методе мы возвращаем количество элементов списка

@@ -24,7 +24,9 @@ public class AppInfo {
         this.icon = icon;
     }
 
-
+    public String getpackageName() {
+        return packageName;
+    }
 
     public int getVersionCode() {
         return versionCode;

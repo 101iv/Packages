@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -81,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
         // Если не уведомить его об изменении данных, то они попросту не отобразятся.
         appsAdapter.notifyDataSetChanged();
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        // добавляем ItemTouchHelper в качестве ItemDecoration (так же, как делали с разделителями)
+        recyclerView.addItemDecoration(itemTouchHelper);
+        //"прикрепляем" ItemTouchHelper к RecyclerView
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
     }
@@ -189,6 +195,46 @@ public class MainActivity extends AppCompatActivity {
         installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // Создаст новый процесс
 
         startActivity(installIntent);
+
+    }
+
+    private final ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
+
+        @Override
+        //этот метод вызывается, когда пользователь начинает тянуть ячейку.
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            //ItemTouchHelper.ACTION_STATE_IDLE сообщает, что действие запрещено, так как мы не позволяем перемещать ячейку.
+            //ItemTouchHelper.END говорит о том, что мы разрешаем перемещение ячейки "в конец"
+            // — слева направо на LTR локалях и справа налево на RTL локалях.
+            return makeMovementFlags(ItemTouchHelper.ACTION_STATE_IDLE, ItemTouchHelper.END);
+        }
+
+        @Override
+        //вызывается, когда пользователь переместил ячейку. Вторым аргуметром передаётся
+        // ViewHolder ячейки, которую переместили, а третьим — ViewHolder ячейки,
+        // на которую произошло перетаскивание.
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        //вызывается, когда пользователь завершил жест "свайп". Первым аргументом передаётся
+        // ViewHolder ячейки, которую свайпнули, а вторым — направление свайпа.
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            AppInfo appInfo = (AppInfo) viewHolder.itemView.getTag();
+
+             startAppUninstallation(appInfo);
+            }
+        };
+
+
+    private void startAppUninstallation(AppInfo appInfo) {
+        //неявный Intent
+        Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
+
+        intent.setData(Uri.parse("package:" + appInfo.getpackageName()));
+        Log.i(TAG,"uninstall package:" + appInfo.getpackageName());
+        startActivity(intent);
 
     }
 
