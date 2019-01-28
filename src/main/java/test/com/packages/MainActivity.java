@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     /**свайп для списка */
+    /////
     private SwipeRefreshLayout swipeRefreshLayout;
     private AppsAdapter appsAdapter;
     private AppManager appManager;
