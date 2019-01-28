@@ -115,5 +115,18 @@ public class FilePickerActivity  extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        //вызываем метод суперкласса только в том случае,
+        // если fileManager ещё не существует (например, если пользователь не предоставил разрешение)
+        if (fileManager != null && fileManager.navigateUp()) {
+            updateFileList();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
 }
 
