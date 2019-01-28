@@ -227,18 +227,25 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+// версия без root
+//    private void startAppUninstallation(AppInfo appInfo) {
+//        //неявный Intent
+//        Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
+//
+//        intent.setData(Uri.parse("package:" + appInfo.getPackageName()));
+//        Log.i(TAG,"uninstall package:" + appInfo.getPackageName());
+//        startActivity(intent);
+//
+//    }
 
     private void startAppUninstallation(AppInfo appInfo) {
-        //неявный Intent
-        Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
-
-        intent.setData(Uri.parse("package:" + appInfo.getpackageName()));
-        Log.i(TAG,"uninstall package:" + appInfo.getpackageName());
-        startActivity(intent);
-
+        uninstallWithRoot(appInfo);
     }
 
-
+    private void uninstallWithRoot(AppInfo appInfo) {
+        UninstallAsyncTask uninstallAsyncTask = new UninstallAsyncTask();
+        uninstallAsyncTask.execute(appInfo.getPackageName());
+    }
 
 
 
