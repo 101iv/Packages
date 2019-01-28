@@ -42,12 +42,7 @@ public class MainActivity extends AppCompatActivity {
         //устанавливаем слушатель для этого контейнера
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
-        //Класс, получающий список пакетов
-        appManager = new AppManager(this);
-        List<AppInfo> installedApps = appManager.getInstalledApps();
 
-        //новый адаптер
-        appsAdapter = new AppsAdapter();
 
         //обновляемый список привязываем к его айди из макета
         RecyclerView recyclerView = findViewById(R.id.apps_rv);
@@ -67,8 +62,15 @@ public class MainActivity extends AppCompatActivity {
         //добавляем в список декоратор
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        //Класс, получающий список пакетов
+        appManager = new AppManager(this);
+        List<AppInfo> installedApps = appManager.getInstalledApps();
+
+        //новый адаптер
+        appsAdapter = new AppsAdapter();
+
         //создаем адаптер для обновляемого списка
-        AppsAdapter appsAdapter = new AppsAdapter();
+        //AppsAdapter appsAdapter = new AppsAdapter();
         //и привязывае его к списку
         recyclerView.setAdapter(appsAdapter);
 

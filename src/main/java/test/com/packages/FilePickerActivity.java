@@ -89,5 +89,31 @@ public class FilePickerActivity  extends AppCompatActivity {
         filesAdapter.notifyDataSetChanged();
     }
 
+
+    private final FilesAdapter.OnFileClickListener onFileClickListener = new FilesAdapter.OnFileClickListener() {
+        @Override
+        public void onFileClick(File file) {
+            if (file.isDirectory()) {
+                //переходим в директорию
+                fileManager.navigateTo(file);
+                // и обновляем список файлов в RecyclerView
+                updateFileList();
+            }
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //подписываться мы должны после выполнения метода суперкласса
+        filesAdapter.setOnFileClickListener(onFileClickListener);
+    }
+    @Override
+    protected void onStop() {
+        filesAdapter.setOnFileClickListener(null);
+        //отписываться — до
+        super.onStop();
+    }
+
 }
 
