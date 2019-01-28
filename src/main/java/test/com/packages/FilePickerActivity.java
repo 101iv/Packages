@@ -1,6 +1,7 @@
 package test.com.packages;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,9 +25,8 @@ public class FilePickerActivity  extends AppCompatActivity {
     private static final String TAG = "FilePickerActivity";
     private static final int PERMISSION_REQUEST_CODE = 1;
     private FileManager fileManager;
-
-
     private FilesAdapter filesAdapter;
+    public static final String EXTRA_FILE_PATH = "file_path";
 
 
     @Override
@@ -98,6 +98,17 @@ public class FilePickerActivity  extends AppCompatActivity {
                 fileManager.navigateTo(file);
                 // и обновляем список файлов в RecyclerView
                 updateFileList();
+            } else {
+                //проверить расширение файла
+                if (file.getName().endsWith(".apk")) {
+                    // создаём Intent, засовываем в него путь до файла
+                    Intent intent = new Intent();
+                    intent.putExtra(EXTRA_FILE_PATH, file.getAbsolutePath());
+                    // сообщаем, что все прошло хорошо, и передаём созданный Intent.
+                    setResult(RESULT_OK, intent);
+                    //завершаем Activity
+                    finish();
+                }
             }
         }
     };
